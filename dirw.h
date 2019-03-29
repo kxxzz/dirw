@@ -25,30 +25,30 @@ typedef double f64;
 
 enum
 {
-    FILEW_PATH_BUF_MAX = 260,
+    DIRW_PATH_BUF_MAX = 260,
 };
 
 
-typedef enum FILEW_Change
+typedef enum DIRW_Change
 {
-    FILEW_Change_Add = 0,
-    FILEW_Change_Delete,
-    FILEW_Change_Modified,
+    DIRW_Change_Add = 0,
+    DIRW_Change_Delete,
+    DIRW_Change_Modified,
 
-    FILEW_NumChanges
-} FILEW_Change;
+    DIRW_NumChanges
+} DIRW_Change;
 
-typedef void(*FILEW_Callback)(const char* dir, const char* filename, FILEW_Change change);
+typedef void(*DIRW_Callback)(const char* dir, const char* filename, DIRW_Change change);
 
 
 
-typedef struct FILEW_Context FILEW_Context;
+typedef struct DIRW_Context DIRW_Context;
 
-FILEW_Context* FILEW_newContext(void);
-void FILEW_contextFree(FILEW_Context* ctx);
+DIRW_Context* DIRW_newContext(void);
+void DIRW_contextFree(DIRW_Context* ctx);
 
-void FILEW_addFile(FILEW_Context* ctx, const char* path, FILEW_Callback cb);
-void FILEW_poll(FILEW_Context* ctx);
+void DIRW_addDir(DIRW_Context* ctx, const char* path, DIRW_Callback cb);
+void DIRW_poll(DIRW_Context* ctx);
 
 
 

@@ -5,7 +5,7 @@
 extern "C"
 {
 
-#include "filew.h"
+#include "dirw.h"
 #include <malloc.h>
 #include <string.h>
 #include <assert.h>
@@ -102,20 +102,20 @@ using namespace FW;
 
 
 
-struct FILEW_Op
+struct DIRW_Op
 {
-    char dir[FILEW_PATH_BUF_MAX];
-    char filename[FILEW_PATH_BUF_MAX];
-    FILEW_Change change;
-    FILEW_Callback cb;
+    char dir[DIRW_PATH_BUF_MAX];
+    char filename[DIRW_PATH_BUF_MAX];
+    DIRW_Change change;
+    DIRW_Callback cb;
 
-    bool operator==(const FILEW_Op& _b) const
+    bool operator==(const DIRW_Op& _b) const
     {
-        const FILEW_Op* a = this;
-        const FILEW_Op* b = &_b;
+        const DIRW_Op* a = this;
+        const DIRW_Op* b = &_b;
         return
-            (0 == strncmp(a->dir, b->dir, FILEW_PATH_BUF_MAX)) &&
-            (0 == strncmp(a->filename, b->filename, FILEW_PATH_BUF_MAX)) &&
+            (0 == strncmp(a->dir, b->dir, DIRW_PATH_BUF_MAX)) &&
+            (0 == strncmp(a->filename, b->filename, DIRW_PATH_BUF_MAX)) &&
             (a->change == b->change) &&
             (a->cb == b->cb);
     }
@@ -125,38 +125,38 @@ struct FILEW_Op
 
 
 
-class FILEW_Listener : public FileWatchListener
+class DIRW_Listener : public FileWatchListener
 {
-    FILEW_Context* context;
-    std::map<WatchID, FILEW_Callback> m_cbMap;
+    DIRW_Context* context;
+    std::map<WatchID, DIRW_Callback> m_cbMap;
 
 public:
-    FILEW_Listener(FILEW_Context* ctx) : context(ctx) {}
+    DIRW_Listener(DIRW_Context* ctx) : context(ctx) {}
 
-    void addCB(WatchID watchid, FILEW_Callback cb)
+    void addCB(WatchID watchid, DIRW_Callback cb)
     {
-        m_cbMap.insert(std::pair<WatchID, FILEW_Callback>(watchid, cb));
+        m_cbMap.insert(std::pair<WatchID, DIRW_Callback>(watchid, cb));
     }
     void handleFileAction(WatchID watchid, const String& dir, const String& filename, Action action);
 };
 
 
-struct FILEW_Context
+struct DIRW_Context
 {
     double interval;
     double lastUpdateTime;
     FileWatcher* hander;
-    FILEW_Listener* listener;
-    std::vector<FILEW_Op> fileOPs;
+    DIRW_Listener* listener;
+    std::vector<DIRW_Op> fileOPs;
 
-    FILEW_Context()
+    DIRW_Context()
         : interval(1.0)
         , lastUpdateTime(0.0)
         , hander(new FileWatcher())
-        , listener(new FILEW_Listener(this))
+        , listener(new DIRW_Listener(this))
     {
     }
-    ~FILEW_Context()
+    ~DIRW_Context()
     {
         delete listener;
         delete hander;
@@ -166,24 +166,24 @@ struct FILEW_Context
 
 
 
-void FILEW_Listener::handleFileAction(WatchID watchid, const String& dir, const String& filename, Action action)
+void DIRW_Listener::handleFileAction(WatchID watchid, const String& dir, const String& filename, Action action)
 {
-    FILEW_Change change;
+    DIRW_Change change;
     switch (action)
     {
     case Actions::Add:
     {
-        change = FILEW_Change_Add;
+        change = DIRW_Change_Add;
         break;
     }
     case Actions::Delete:
     {
-        change = FILEW_Change_Delete;
+        change = DIRW_Change_Delete;
         break;
     }
     case Actions::Modified:
     {
-        change = FILEW_Change_Modified;
+        change = DIRW_Change_Modified;
         break;
     }
     default:
@@ -192,17 +192,17 @@ void FILEW_Listener::handleFileAction(WatchID watchid, const String& dir, const 
     }
     //switch (change)
     //{
-    //case FILEW_Change_Add:
+    //case DIRW_Change_Add:
     //{
     //    printf("File (%s/%s) Added!", dir.c_str(), filename.c_str());
     //    break;
     //}
-    //case FILEW_Change_Delete:
+    //case DIRW_Change_Delete:
     //{
     //    printf("File (%s/%s) Deleted!", dir.c_str(), filename.c_str());
     //    break;
     //}
-    //case FILEW_Change_Modified:
+    //case DIRW_Change_Modified:
     //{
     //    printf("File (%s/%s) Modified!", dir.c_str(), filename.c_str());
     //    break;
@@ -211,9 +211,9 @@ void FILEW_Listener::handleFileAction(WatchID watchid, const String& dir, const 
     //    assert(false);
     //    break;
     //}
-    for (std::map<WatchID, FILEW_Callback>::const_iterator it = m_cbMap.begin(); it != m_cbMap.end(); ++it)
+    for (std::map<WatchID, DIRW_Callback>::const_iterator it = m_cbMap.begin(); it != m_cbMap.end(); ++it)
     {
-        FILEW_Op op = { 0 };
+        DIRW_Op op = { 0 };
         stzncpy(op.dir, dir.c_str(), dir.size() + 1);
         stzncpy(op.filename, filename.c_str(), filename.size() + 1);
         op.cb = it->second;
@@ -229,12 +229,12 @@ void FILEW_Listener::handleFileAction(WatchID watchid, const String& dir, const 
 
 
 
-extern "C" FILEW_Context* FILEW_newContext(void)
+extern "C" DIRW_Context* DIRW_newContext(void)
 {
-    return new FILEW_Context();
+    return new DIRW_Context();
 }
 
-extern "C" void FILEW_contextFree(FILEW_Context* ctx)
+extern "C" void DIRW_contextFree(DIRW_Context* ctx)
 {
     assert(ctx);
     delete ctx;
@@ -243,7 +243,7 @@ extern "C" void FILEW_contextFree(FILEW_Context* ctx)
 
 
 
-extern "C" void FILEW_addFile(FILEW_Context* ctx, const char* path, FILEW_Callback cb)
+extern "C" void DIRW_addDir(DIRW_Context* ctx, const char* path, DIRW_Callback cb)
 {
     WatchID watchid = ctx->hander->addWatch(path, ctx->listener);
     ctx->listener->addCB(watchid, cb);
@@ -254,7 +254,7 @@ extern "C" void FILEW_addFile(FILEW_Context* ctx, const char* path, FILEW_Callba
 
 
 
-extern "C" void FILEW_poll(FILEW_Context* ctx)
+extern "C" void DIRW_poll(DIRW_Context* ctx)
 {
     ctx->hander->update();
 
@@ -264,7 +264,7 @@ extern "C" void FILEW_poll(FILEW_Context* ctx)
         ctx->lastUpdateTime = time;
         for (u32 i = 0; i < ctx->fileOPs.size(); ++i)
         {
-            FILEW_Op* op = &ctx->fileOPs[i];
+            DIRW_Op* op = &ctx->fileOPs[i];
             op->cb(op->dir, op->filename, op->change);
         }
         ctx->fileOPs.clear();
