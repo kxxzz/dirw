@@ -46,8 +46,9 @@ typedef struct FILEW_Context FILEW_Context;
 
 FILEW_Context* FILEW_newContext(void);
 void FILEW_contextFree(FILEW_Context* ctx);
-void FILEW_contextAddFile(FILEW_Context* ctx, const char* path, FILEW_Callback cb);
-void FILEW_contextUpdate(FILEW_Context* ctx);
+
+void FILEW_addFile(FILEW_Context* ctx, const char* path, FILEW_Callback cb);
+void FILEW_poll(FILEW_Context* ctx);
 
 
 

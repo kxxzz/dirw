@@ -243,7 +243,7 @@ extern "C" void FILEW_contextFree(FILEW_Context* ctx)
 
 
 
-extern "C" void FILEW_contextAddFile(FILEW_Context* ctx, const char* path, FILEW_Callback cb)
+extern "C" void FILEW_addFile(FILEW_Context* ctx, const char* path, FILEW_Callback cb)
 {
     WatchID watchid = ctx->hander->addWatch(path, ctx->listener);
     ctx->listener->addCB(watchid, cb);
@@ -254,7 +254,7 @@ extern "C" void FILEW_contextAddFile(FILEW_Context* ctx, const char* path, FILEW
 
 
 
-extern "C" void FILEW_contextUpdate(FILEW_Context* ctx)
+extern "C" void FILEW_poll(FILEW_Context* ctx)
 {
     ctx->hander->update();
 
