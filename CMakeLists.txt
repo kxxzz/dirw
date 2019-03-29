@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.5)
-project (FILEW)
+project (FILW)
 
 
 set (CMAKE_C_STANDARD 11)
