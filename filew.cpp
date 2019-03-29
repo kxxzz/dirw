@@ -149,11 +149,11 @@ struct FilW_Context
     FilW_Listener* listener;
     std::vector<FilW_Op> fileOPs;
 
-    FilW_Context() :
-        interval(1.0),
-        lastUpdateTime(0.0),
-        hander(new FileWatcher()),
-        listener(new FilW_Listener(this))
+    FilW_Context()
+        : interval(1.0)
+        , lastUpdateTime(0.0)
+        , hander(new FileWatcher())
+        , listener(new FilW_Listener(this))
     {
     }
     ~FilW_Context()
@@ -166,10 +166,10 @@ struct FilW_Context
 
 
 
-void FilW_Listener::handleFileAction(WatchID watchid, const String& dir, const String& filename, Action _change)
+void FilW_Listener::handleFileAction(WatchID watchid, const String& dir, const String& filename, Action action)
 {
     FilW_Change change;
-    switch (_change)
+    switch (action)
     {
     case Actions::Add:
     {
@@ -194,17 +194,17 @@ void FilW_Listener::handleFileAction(WatchID watchid, const String& dir, const S
     //{
     //case FilW_Change_Add:
     //{
-    //    log_debug("File (%s/%s) Added!", dir.c_str(), filename.c_str());
+    //    printf("File (%s/%s) Added!", dir.c_str(), filename.c_str());
     //    break;
     //}
     //case FilW_Change_Delete:
     //{
-    //    log_debug("File (%s/%s) Deleted!", dir.c_str(), filename.c_str());
+    //    printf("File (%s/%s) Deleted!", dir.c_str(), filename.c_str());
     //    break;
     //}
     //case FilW_Change_Modified:
     //{
-    //    log_debug("File (%s/%s) Modified!", dir.c_str(), filename.c_str());
+    //    printf("File (%s/%s) Modified!", dir.c_str(), filename.c_str());
     //    break;
     //}
     //default:
