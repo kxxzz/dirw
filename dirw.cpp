@@ -71,22 +71,22 @@ static char* stzncpy(char* dst, char const* src, size_t len)
 double getNow(void)
 {
 #ifdef _WIN32
-    LARGE_INTEGER count;
-    QueryPerformanceCounter(&count);
-    LARGE_INTEGER freq;
-    QueryPerformanceFrequency(&freq);
-    assert(freq.QuadPart > 0);
-    return (double)count.QuadPart / freq.QuadPart;
+    LARGE_INTEGER count[1];
+    QueryPerformanceCounter(count);
+    LARGE_INTEGER freq[1];
+    QueryPerformanceFrequency(freq);
+    assert(freq->QuadPart > 0);
+    return (double)count->QuadPart / freq->QuadPart;
 #elif defined(__ANDROID__)
-    struct timespec now;
-    clock_gettime(CLOCK_MONOTONIC, &now);
-    return (double)(now.tv_sec * 1000000000LL + now.tv_nsec) / 1000000000.0;
+    struct timespec now[1];
+    clock_gettime(CLOCK_MONOTONIC, now);
+    return (double)(now->tv_sec * 1000000000LL + now->tv_nsec) / 1000000000.0;
 #elif defined(__EMSCRIPTEN__)
     double now = (double)clock();
     return now / CLOCKS_PER_SEC;
 #else
-    struct timeval tv;
-    int r = gettimeofday(&tv, 0);
+    struct timeval tv[1];
+    int r = gettimeofday(tv, 0);
     if (0 != r)
     {
         return NaN;
