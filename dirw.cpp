@@ -229,7 +229,7 @@ void DIRW_Listener::handleFileAction(WatchID watchid, const String& dir, const S
 
 
 
-extern "C" DIRW_Context* DIRW_newContext(void)
+extern "C" DIRW_Context* DIRW_contextNew(void)
 {
     return new DIRW_Context();
 }

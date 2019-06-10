@@ -44,7 +44,7 @@ typedef void(*DIRW_Callback)(const char* dir, const char* filename, DIRW_Change 
 
 typedef struct DIRW_Context DIRW_Context;
 
-DIRW_Context* DIRW_newContext(void);
+DIRW_Context* DIRW_contextNew(void);
 void DIRW_contextFree(DIRW_Context* ctx);
 
 void DIRW_addDir(DIRW_Context* ctx, const char* path, DIRW_Callback cb);
