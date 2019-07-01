@@ -13,7 +13,7 @@ include (FeatureSummary)
 include (CMakeDependentOption)
 
 
-include_directories (..)
+include_directories (.)
 add_definitions (-D_UNICODE -D_CRT_SECURE_NO_WARNINGS -D_USE_MATH_DEFINES)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
